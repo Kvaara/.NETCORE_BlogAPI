@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BlogWebAPI.Data\BlogWebAPI.Data.csproj" />
+    <ProjectReference Include="..\BlogWebAPI.Models\BlogWebAPI.Models.csproj" />
+  </ItemGroup>
+
 </Project>

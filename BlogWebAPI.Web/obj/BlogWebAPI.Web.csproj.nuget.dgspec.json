@@ -4,6 +4,173 @@
     "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Web\\BlogWebAPI.Web.csproj": {}
   },
   "projects": {
+    "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Data\\BlogWebAPI.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Data\\BlogWebAPI.Data.csproj",
+        "projectName": "BlogWebAPI.Data",
+        "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Data\\BlogWebAPI.Data.csproj",
+        "packagesPath": "C:\\Users\\Finni\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Finni\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj": {
+                "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj",
+        "projectName": "BlogWebAPI.Models",
+        "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj",
+        "packagesPath": "C:\\Users\\Finni\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Finni\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Services\\BlogWebAPI.Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Services\\BlogWebAPI.Services.csproj",
+        "projectName": "BlogWebAPI.Services",
+        "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Services\\BlogWebAPI.Services.csproj",
+        "packagesPath": "C:\\Users\\Finni\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Finni\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Data\\BlogWebAPI.Data.csproj": {
+                "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Data\\BlogWebAPI.Data.csproj"
+              },
+              "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj": {
+                "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Web\\BlogWebAPI.Web.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -25,7 +192,14 @@
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj": {
+                "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj"
+              },
+              "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Services\\BlogWebAPI.Services.csproj": {
+                "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Services\\BlogWebAPI.Services.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

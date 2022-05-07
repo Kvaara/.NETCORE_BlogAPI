@@ -72,6 +72,43 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "BlogWebAPI.Data/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "BlogWebAPI.Models": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/BlogWebAPI.Data.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BlogWebAPI.Data.dll": {}
+        }
+      },
+      "BlogWebAPI.Models/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/BlogWebAPI.Models.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BlogWebAPI.Models.dll": {}
+        }
+      },
+      "BlogWebAPI.Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "BlogWebAPI.Data": "1.0.0",
+          "BlogWebAPI.Models": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/BlogWebAPI.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BlogWebAPI.Services.dll": {}
+        }
       }
     }
   },
@@ -200,10 +237,27 @@
         "swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
+    },
+    "BlogWebAPI.Data/1.0.0": {
+      "type": "project",
+      "path": "../BlogWebAPI.Data/BlogWebAPI.Data.csproj",
+      "msbuildProject": "../BlogWebAPI.Data/BlogWebAPI.Data.csproj"
+    },
+    "BlogWebAPI.Models/1.0.0": {
+      "type": "project",
+      "path": "../BlogWebAPI.Models/BlogWebAPI.Models.csproj",
+      "msbuildProject": "../BlogWebAPI.Models/BlogWebAPI.Models.csproj"
+    },
+    "BlogWebAPI.Services/1.0.0": {
+      "type": "project",
+      "path": "../BlogWebAPI.Services/BlogWebAPI.Services.csproj",
+      "msbuildProject": "../BlogWebAPI.Services/BlogWebAPI.Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "BlogWebAPI.Models >= 1.0.0",
+      "BlogWebAPI.Services >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
   },
@@ -231,7 +285,14 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj": {
+              "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Models\\BlogWebAPI.Models.csproj"
+            },
+            "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Services\\BlogWebAPI.Services.csproj": {
+              "projectPath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Services\\BlogWebAPI.Services.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
