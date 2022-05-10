@@ -1,48 +1,173 @@
 ﻿using System.Linq.Expressions;
 using BlogWebAPI.Data.Models;
 using BlogWebAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogWebAPI.Data;
 
 public class BlogRepository<T>: IBlogRepository<T> where T: EntityModel
 {
-    public Task<Guid> Create(T entity)
+    private readonly DbSet<T> _entities;
+    private readonly BlogDbContext _db;
+    
+    public BlogRepository(BlogDbContext db)
     {
-        throw new NotImplementedException();
+        _entities = db.Set<T>();
+        _db = db;
+    }
+    
+    /// <summary>
+    /// Creates a resource in the database
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <returns></returns>
+    public async Task<Guid> Create(T entity)
+    {
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        
+        entity.CreatedOn = DateTime.UtcNow;
+        entity.UpdatedOn = DateTime.UtcNow;
+        _entities.Add(entity);
+        await _db.SaveChangesAsync();
+        return entity.ID;
     }
 
-    public Task<T> GetById(Guid id)
+    /// <summary>
+    /// Gets the entity with the provided Primary Key id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<T?> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        return await _entities.SingleOrDefaultAsync(ent => ent.ID == id);
     }
 
-    public Task<T> GetFirstWhere<TOrder>(Expression<Func<T, bool>> whereExp, Expression<Func<T, TOrder>> orderByExp)
+    /// <summary>
+    /// Gets a first matching entity given the WHERE expression
+    /// and the ORDER BY Expression
+    /// </summary>
+    /// <param name="whereExp"></param>
+    /// <param name="orderByExp"></param>
+    /// <typeparam name="TOrder"></typeparam>
+    /// <returns></returns>
+    public async Task<T?> GetFirstWhere<TOrder>(Expression<Func<T, bool>> whereExp, Expression<Func<T, TOrder>> orderByExp)
     {
-        throw new NotImplementedException();
+        return await _entities
+            .Where(whereExp)
+            .OrderByDescending(orderByExp)
+            .FirstOrDefaultAsync();
     }
 
-    public Task<List<T>> GetAllWhere<TOrder>(Expression<Func<T, bool>> whereExp, Expression<Func<T, TOrder>> orderByExp, int limit = 1000)
+    /// <summary>
+    /// Gets a list of entities in the database
+    /// given a whereExp (WHERE) and an orderBy (ORDER BY) Expression
+    /// </summary>
+    /// <param name="whereExp"></param>
+    /// <param name="orderByExp"></param>
+    /// <param name="limit"></param>
+    /// <typeparam name="TOrder"></typeparam>
+    /// <returns></returns>
+    public async Task<List<T>> GetAllWhere<TOrder>(Expression<Func<T, bool>> whereExp, Expression<Func<T, TOrder>> orderByExp, int limit = 1000)
     {
-        throw new NotImplementedException();
+        var entities = _entities
+            .AsQueryable()
+            .Where(whereExp);
+        
+        return await entities
+            .Take(limit)
+            .OrderByDescending(orderByExp)
+            .ToListAsync();
     }
 
-    public Task<PaginationResult<T>> GetAll(int page, int perPage)
+    /// <summary>
+    /// Gets a Paginated collection of all entities inside the database
+    /// Ordered by UpdatedOn DESC
+    /// </summary>
+    /// <param name="page"></param>
+    /// <param name="perPage"></param>
+    /// <returns></returns>
+    public async Task<PaginationResult<T>> GetAll(int page = 1, int perPage = 3)
     {
-        throw new NotImplementedException();
+        var count = await _entities.CountAsync();
+        var entitiesToSkip = (page - 1) * perPage;
+        var entities = await _entities
+            .OrderByDescending(ent => ent.UpdatedOn)
+            .Skip(entitiesToSkip)
+            .Take(perPage)
+            .ToListAsync();
+
+        return new PaginationResult<T>
+        {
+            TotalCount = count,
+            Results = entities,
+            ResultsPerPage = perPage,
+            PageNumber = page
+        };
     }
 
-    public Task<PaginationResult<T>> GetAll(int page, int perPage, Expression<Func<T, bool>> orderByExp)
+    /// <summary>
+    /// Gets a Paginated collection of all entities inside the database given the whereExp
+    /// Ordered by UpdatedOn DESC
+    /// </summary>
+    /// <param name="page"></param>
+    /// <param name="perPage"></param>
+    /// <param name="whereExp"></param>
+    /// <returns></returns>
+    public async Task<PaginationResult<T>> GetAllWhere(int page, int perPage, Expression<Func<T, bool>> whereExp)
     {
-        throw new NotImplementedException();
+        var count = await _entities.CountAsync();
+        var entitiesToSkip = (page - 1) * perPage;
+        var entities = await _entities
+            .Where(whereExp)
+            .OrderByDescending(ent => ent.UpdatedOn)
+            .Skip(entitiesToSkip)
+            .Take(perPage)
+            .ToListAsync();
+
+        return new PaginationResult<T>
+        {
+            TotalCount = count,
+            Results = entities,
+            ResultsPerPage = perPage,
+            PageNumber = page
+        };
     }
 
-    public Task<T> Update(T entity)
+    /// <summary>
+    /// Updates a resource in the database
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public async Task<T> Update(T entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        
+        entity.UpdatedOn = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+        return entity;
     }
 
-    public Task<bool> Delete(Guid id)
+    /// <summary>
+    /// Deletes a resource from the database
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public async Task<bool> Delete(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (id == Guid.Empty) throw new ArgumentNullException(nameof(id));
+            
+            var entity = await _entities.SingleOrDefaultAsync(ent => ent.ID == id);
+            _entities.Remove(entity);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
