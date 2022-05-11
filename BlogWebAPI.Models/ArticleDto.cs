@@ -13,6 +13,6 @@ public class ArticleDto: BlogDtoModel
     public string Content { get; set; }
     public string AuthorId { get; set; }
     public string AuthorName { get; set; }
-    public List<CommentDtoModel> Comments { get; set; }
+    public List<CommentDto> Comments { get; set; }
     public List<string> Tags { get; set; }
 }
