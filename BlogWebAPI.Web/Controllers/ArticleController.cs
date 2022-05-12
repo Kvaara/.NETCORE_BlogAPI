@@ -41,8 +41,23 @@ public class ArticleController : ControllerBase
     {
         try
         {
-        var guid = Guid.Parse(id);
-        var article = await _articleService.GetById(guid);
+            var guid = Guid.Parse(id);
+            var article = await _articleService.GetById(guid);
+
+            if (article.Data is null && article.Error is null)
+            {
+                _logger.LogWarning($"Requested Article not found: {id}");
+                return NotFound($"Article not found: {id}");
+            }
+
+            if (article.Error is not null)
+            {
+                _logger.LogError($"Error retrieving an Article: {id}, {article.Error}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "There was an error retrieving an Article.");
+            }
+
+            _logger.LogDebug($"Retrieved an Article: {id}");
+            return Ok(article.Data);
         }
         catch (FormatException err)
         {
