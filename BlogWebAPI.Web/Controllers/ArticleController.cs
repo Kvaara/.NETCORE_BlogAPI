@@ -20,6 +20,11 @@ public class ArticleController : ControllerBase
         _articleService = articleService;
     }
 
+    /// <summary>
+    /// Handles a POST request for creating an Article
+    /// </summary>
+    /// <param name="article"></param>
+    /// <returns></returns>
     [HttpPost("/article")]
     public async Task<ActionResult> CreateArticle([FromBody] ArticleDto article)
     {
@@ -36,6 +41,11 @@ public class ArticleController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, new {id = newArticle.Data});
     }
 
+    /// <summary>
+    /// Handles a GET request that returns a possible Article based on a given id. 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("/article/{id}")]
     public async Task<ActionResult> GetArticle(string id)
     {
@@ -66,6 +76,11 @@ public class ArticleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Handles a GET request for getting a paginated lists of Articles.
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
     [HttpGet("/article")]
     public async Task<ActionResult> GetPaginatedArticles([FromQuery] ManyArticlesRequest query)
     {
