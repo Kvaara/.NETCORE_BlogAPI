@@ -11,56 +11,101 @@ namespace BlogWebAPI.Services;
 public class ArticleService: IArticleService
 {
     private readonly IBlogRepository<Article> _articlesRepo;
-    private readonly IBlogRepository<ArticleTag> _articleTags;
-    private readonly IBlogRepository<Tag> _tags;
-    private readonly IBlogRepository<User> _users;
+    private readonly IBlogRepository<ArticleTag> _articleTagsRepo;
+    private readonly IBlogRepository<Tag> _tagsRepo;
+    private readonly IBlogRepository<User> _usersRepo;
     private readonly ILogger<ArticleService> _logger;
     private readonly IMapper _mapper;
     public ArticleService(
         IBlogRepository<Article> articlesRepo,
-        IBlogRepository<ArticleTag> articleTags,
-        IBlogRepository<Tag> tags,
-        IBlogRepository<User> users,
+        IBlogRepository<ArticleTag> articleTagsRepo,
+        IBlogRepository<Tag> tagsRepo,
+        IBlogRepository<User> usersRepo,
         ILogger<ArticleService> logger,
         IMapper mapper
     )
     {
         _articlesRepo = articlesRepo;
-        _articleTags = articleTags;
-        _tags = tags;
-        _users = users;
+        _articleTagsRepo = articleTagsRepo;
+        _tagsRepo = tagsRepo;
+        _usersRepo = usersRepo;
         _logger = logger;
         _mapper = mapper;
     }
     
     public async Task<PagedServiceResult<ArticleDto>> GetAll(int page, int perPage)
     {
-        var articles = await _articlesRepo.GetAll(page, perPage);
+        try
+        {
+            var articles = await _articlesRepo.GetAll(page, perPage);
 
-        var articleModels = new List<ArticleDto>();
+            var articleModels = new List<ArticleDto>();
         
-        // Adding the corresponding tags and users to the Article data transfer objects
-        foreach (var article in articles.Results)
-        {
-            var articleModel = _mapper.Map<ArticleDto>(article);
+            // Adding the corresponding tags and users to the Article data transfer objects
+            foreach (var article in articles.Results)
+            {
+                var articleModel = _mapper.Map<ArticleDto>(article);
             
-            // Getting all of the associated Article tags:
-            var articleTags = await _articleTags.GetAllWhere();
-        }
+                // Getting all of the associated Article tags (join table):
+                var articleTags = await _articleTagsRepo.GetAllWhere(
+                    at => at.ArticleID == article.ID,
+                    at => at.CreatedOn);
+            
+                // Getting the associated Tag Ids:
+                var tagIds = articleTags.Select(t => t.TagID).ToList();
+            
+                // Getting the Tag entity instances:
+                var tags = await _tagsRepo.GetAllWhere(
+                    tag => tagIds.Contains(tag.ID),
+                    tag => tag.CreatedOn);
+
+                // Map/Assign all of the tag names into the AutoMapped articleModel.
+                if (articleTags.Count > 0)
+                {
+                    articleModel.Tags = tags.Select(tag => tag.Name).ToList();
+                }
+
+                var author = await _usersRepo.GetFirstWhere(
+                    user => user.ID == article.AuthorID,
+                    user => user.UpdatedOn);
+
+                articleModel.AuthorName = author.UserName;
+            
+                // Adding the build AutoMapped articleModel into the high-level articleModels list.
+                articleModels.Add(articleModel);
+            }
+
+            var articlesResultModel = new PaginationResult<ArticleDto>
+            {
+                TotalCount = articles.TotalCount,
+                Results = articleModels,
+                ResultsPerPage = articles.ResultsPerPage,
+                PageNumber = articles.PageNumber,
+            };
+
+            _logger.LogDebug($"Returning paginated articles. Page {page}, perPage {perPage}");
         
-        var articlesResultModel = new PaginationResult<ArticleDto>
-        {
-            TotalCount = 0,
-            Results = null,
-            ResultsPerPage = 0,
-            PageNumber = null,
+            return new PagedServiceResult<ArticleDto>
+            {
+                IsSuccess = true,
+                Data = articlesResultModel,
+                Error = null,
+            };
         }
-        
-        return new PagedServiceResult<ArticleDto>
+        catch (Exception e)
         {
-            IsSuccess = true,
-            Data = articlesResultModel,
-            Error = null,
+            _logger.LogError($"Failed to return paginated articles. {e.StackTrace}");
+
+            return new PagedServiceResult<ArticleDto>
+            {
+                IsSuccess = false,
+                Data = null,
+                Error = new ServiceError
+                {
+                    Stacktrace = e.StackTrace,
+                    Message = e.Message,
+                }
+            };
         }
     }
 
