@@ -109,22 +109,80 @@ public class ArticleService: IArticleService
         }
     }
 
-    public Task<ServiceResult<ArticleDto>> GetById(Guid id)
+    public async Task<ServiceResult<ArticleDto>> GetById(Guid id)
+    {
+        try
+        {
+            var article = await _articlesRepo.GetById(id);
+            if (article == null)
+            {
+                return new ServiceResult<ArticleDto>
+                {
+                    IsSuccess = true,
+                    Data = null,
+                    Error = null,
+                };
+            }
+
+            var articleModel = _mapper.Map<ArticleDto>(article);
+
+            var author = await _usersRepo.GetFirstWhere(
+                user => user.ID == article.AuthorID,
+                user => user.UpdatedOn);
+
+            articleModel.AuthorName = author.UserName;
+
+            articleModel.Tags = new List<string>();
+
+            var articleTags = await _articleTagsRepo.GetAllWhere(
+                tag => tag.ArticleID == id,
+                tag => tag.CreatedOn);
+
+            if (articleTags.Count > 0)
+            {
+                var tagIds = articleTags.Select(at => at.TagID).ToList();
+                var tags = await _tagsRepo.GetAllWhere(
+                    tag => tagIds.Contains(tag.ID),
+                    tag => tag.CreatedOn);
+                articleModel.Tags = tags.Select(tag => tag.Name).ToList();
+            }
+        
+            _logger.LogDebug($"Returning an Article with ID: {id}");
+            return new ServiceResult<ArticleDto>
+            {
+                IsSuccess = true,
+                Data = articleModel,
+                Error = null,
+            };
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to fetch an Article with id: {id}.");
+
+            return new ServiceResult<ArticleDto>
+            {
+                IsSuccess = false,
+                Data = null,
+                Error = new ServiceError
+                {
+                    Stacktrace = e.StackTrace,
+                    Message = e.Message,
+                }
+            };
+        }
+    }
+
+    public async Task<ServiceResult<ArticleDto>> Update(Guid id, ArticleDto article)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ServiceResult<ArticleDto>> Update(Guid id, ArticleDto article)
+    public async Task<ServiceResult<Guid>> Create(ArticleDto article)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ServiceResult<Guid>> Create(ArticleDto article)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ServiceResult<Guid>> Delete(Guid id)
+    public async Task<ServiceResult<Guid>> Delete(Guid id)
     {
         throw new NotImplementedException();
     }
