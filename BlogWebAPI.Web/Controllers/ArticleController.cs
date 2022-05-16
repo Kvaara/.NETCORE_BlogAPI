@@ -71,7 +71,10 @@ public class ArticleController : ControllerBase
         }
         catch (FormatException err)
         {
-            _logger.LogWarning($"There was a GUID related formatting error for article: {id}");
+            _logger.LogError($"There was a GUID related formatting error for article: {id}." 
+                             + err.Message 
+                             + "\n"
+                             + err.StackTrace);
             return BadRequest(id);
         }
     }
