@@ -1,4 +1,7 @@
 using BlogWebAPI.Data;
+using BlogWebAPI.Services;
+using BlogWebAPI.Services.Interfaces;
+using BlogWebAPI.Services.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(
+    config => config.AddProfile<EntityMappingProfile>(), 
+    typeof(Program));
+
+// Data Access Layer
+builder.Services.AddScoped(typeof(IBlogRepository<>), typeof(BlogRepository<>));
+
+// Service Layer
+builder.Services.AddTransient<IArticleService, ArticleService>();
+
+// You can also add classes using the Singleton pattern
 
 builder.Services.AddDbContext<BlogDbContext>(options =>
 {
