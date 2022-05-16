@@ -177,9 +177,71 @@ public class ArticleService: IArticleService
         throw new NotImplementedException();
     }
 
-    public async Task<ServiceResult<Guid>> Create(ArticleDto article)
+    public async Task<ServiceResult<Guid>> Create(ArticleDto articleDto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var article = _mapper.Map<Article>(articleDto);
+            var authorGuid = Guid.Parse(articleDto.AuthorId);
+            var author = await _usersRepo.GetById(authorGuid);
+            article.Author = author;
+            
+            var newArticleId = await _articlesRepo.Create(article);
+
+            if (articleDto.Tags == null)
+            {
+                _logger.LogDebug($"Returning a new Article with id: {newArticleId}.");
+                
+                return new ServiceResult<Guid>
+                {
+                    IsSuccess = true,
+                    Data = newArticleId,
+                    Error = null,
+                };
+            }
+
+            foreach (var articleTag in articleDto.Tags)
+            {
+                var articleTagGuid = Guid.Parse(articleTag);
+                var foundArticleTag = await _tagsRepo.GetFirstWhere(
+                    tag => tag.ID == articleTagGuid,
+                    tag => tag.CreatedOn);
+                
+                if (foundArticleTag == null) continue;
+
+                var newArticleTag = new ArticleTag
+                {
+                    ID = Guid.NewGuid(),
+                    Article = article,
+                    Tag = foundArticleTag,
+                };
+
+                await _articleTagsRepo.Create(newArticleTag);
+            }
+            _logger.LogDebug($"Returning a new Article with id: {newArticleId}.");
+
+            return new ServiceResult<Guid>
+            {
+                IsSuccess = true,
+                Data = newArticleId,
+                Error = null,
+            };
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to create an Article: {e}.");
+
+            return new ServiceResult<Guid>
+            {
+                IsSuccess = false,
+                Data = Guid.Empty,
+                Error = new ServiceError
+                {
+                    Stacktrace = e.StackTrace,
+                    Message = e.Message,
+                }
+            };
+        }
     }
 
     public async Task<ServiceResult<Guid>> Delete(Guid id)
