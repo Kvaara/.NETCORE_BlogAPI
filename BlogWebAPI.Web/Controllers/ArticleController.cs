@@ -154,7 +154,7 @@ public class ArticleController : ControllerBase
             } 
 
             _logger.LogDebug($"Deleted the Article: {id}");
-            return Ok(deletedArticle.Data.ID);
+            return Ok(deletedArticle.Data);
         }
         catch (Exception e)
         {
