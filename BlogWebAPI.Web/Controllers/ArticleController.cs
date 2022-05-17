@@ -71,10 +71,10 @@ public class ArticleController : ControllerBase
         }
         catch (FormatException err)
         {
-            _logger.LogError($"There was a GUID related formatting error for article: {id}." 
-                             + err.Message 
-                             + "\n"
-                             + err.StackTrace);
+            _logger.LogWarning($"There was a GUID related formatting error for article: {id}." 
+                               + err.Message 
+                               + "\n"
+                               + err.StackTrace);
             return BadRequest(id);
         }
     }
@@ -101,5 +101,30 @@ public class ArticleController : ControllerBase
         
         _logger.LogDebug($"Retrieved Articles total: {articles.Data.TotalCount}");
         return Ok(articles.Data);
+    }
+
+    [HttpPut("/article/{id}")]
+    public async Task<ActionResult> UpdateArticle(string id, [FromBody] ArticleDto article)
+    {
+        try
+        {
+            var guid = Guid.Parse(id);
+            var updatedArticle = await _articleService.Update(guid, article);
+
+            if (updatedArticle.Error is not null)
+            {
+                _logger.LogError($"Error updating the Article {id}: {updatedArticle.Error}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "There was an error updating the Article"
+            } 
+
+            _logger.LogDebug($"Updated the Article: {id}");
+            return Ok(updatedArticle.Data.ID);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning($"There was a GUID format error for an Article: {id}"
+            + e.Message + "\n" + e.StackTrace);
+            return BadRequest(id);
+        }
     }
 }
