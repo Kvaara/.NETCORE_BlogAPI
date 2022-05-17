@@ -103,6 +103,12 @@ public class ArticleController : ControllerBase
         return Ok(articles.Data);
     }
 
+    /// <summary>
+    /// A PUT endpoint for the client that handles updating an Article in its entirety.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="article"></param>
+    /// <returns></returns>
     [HttpPut("/article/{id}")]
     public async Task<ActionResult> UpdateArticle(string id, [FromBody] ArticleDto article)
     {
@@ -128,6 +134,11 @@ public class ArticleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// A DELETE endpoint for the user that handles the deletion of an Article. 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("/article/{id}")]
     public async Task<ActionResult> DeleteArticle(string id)
     {
