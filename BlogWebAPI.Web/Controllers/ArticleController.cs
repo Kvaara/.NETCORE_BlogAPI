@@ -114,7 +114,7 @@ public class ArticleController : ControllerBase
             if (updatedArticle.Error is not null)
             {
                 _logger.LogError($"Error updating the Article {id}: {updatedArticle.Error}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "There was an error updating the Article"
+                return StatusCode(StatusCodes.Status500InternalServerError, "There was an error updating the Article");
             } 
 
             _logger.LogDebug($"Updated the Article: {id}");
@@ -124,6 +124,31 @@ public class ArticleController : ControllerBase
         {
             _logger.LogWarning($"There was a GUID format error for an Article: {id}"
             + e.Message + "\n" + e.StackTrace);
+            return BadRequest(id);
+        }
+    }
+
+    [HttpDelete("/article/{id}")]
+    public async Task<ActionResult> DeleteArticle(string id)
+    {
+        try
+        {
+            var guid = Guid.Parse(id);
+            var deletedArticle = await _articleService.Delete(guid);
+
+            if (deletedArticle.Error is not null)
+            {
+                _logger.LogError($"Error deleting the Article {id}: {deletedArticle.Error}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "There was an error deleting the Article");
+            } 
+
+            _logger.LogDebug($"Deleted the Article: {id}");
+            return Ok(deletedArticle.Data.ID);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning($"There was a GUID format error for Deleting the Article: {id}"
+                               + e.Message + "\n" + e.StackTrace);
             return BadRequest(id);
         }
     }
