@@ -5,7 +5,7 @@ namespace BlogWebAPI.Web.Validators;
 
 /// <summary>
 /// Uses FluentValidation to validate the blog CommentDto data.
-/// This prevents users inputting the wrong queries.
+/// This prevents users from making the system behave in unexpected ways when inputting the wrong queries.
 /// </summary>
 public class CommentValidator: AbstractValidator<CommentDto>
 {
