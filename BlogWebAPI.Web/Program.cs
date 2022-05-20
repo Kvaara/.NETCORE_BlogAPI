@@ -45,9 +45,8 @@ builder.Services.AddTransient<AbstractValidator<ManyArticlesRequest>, ManyArticl
 builder.Services.AddTransient<AbstractValidator<ManyCommentsRequest>, ManyCommentsRequestValidator>();
 builder.Services.AddTransient<AbstractValidator<ManyTagsRequest>, ManyTagsRequestValidator>();
 builder.Services.AddTransient<AbstractValidator<ManyUsersRequest>, ManyUsersRequestValidator>();
-
-
 // You can also add classes using the Singleton pattern
+
 
 builder.Services.AddDbContext<BlogDbContext>(options =>
 {
@@ -68,6 +67,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(builder => builder
+    .WithOrigins(
+        "http://localhost:8080",
+        "http://localhost:8081",
+        "http://localhost:8082",
+        "http://localhost:8083",
+        "http://localhost:8084"
+        ).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+);
 
 app.UseAuthorization();
 
