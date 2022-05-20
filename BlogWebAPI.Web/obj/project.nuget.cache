@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "KnpB3Q3/BqWsz/FI+eVJTHBnGxR4t9CQfIeOQrHh4eRsUSGVVlBUwmb5JOQ/R5dYJkfGBXbmiq5s8lVd43vhEQ==",
+  "dgSpecHash": "3sdhC/6Bbimr0r4cfC8SQwlLzxLczTl50d6pmc9zOvNZMeSmG2edsSCE6nzzu63nmuODKbcn8Llgwqhg0rlmhg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Finni\\Desktop\\ASPNET\\DOTNET_BlogAPI\\BlogWebAPI.Web\\BlogWebAPI.Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Finni\\.nuget\\packages\\automapper\\11.0.1\\automapper.11.0.1.nupkg.sha512",
     "C:\\Users\\Finni\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
     "C:\\Users\\Finni\\.nuget\\packages\\fluentvalidation\\11.0.1\\fluentvalidation.11.0.1.nupkg.sha512",
+    "C:\\Users\\Finni\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.0.1\\fluentvalidation.aspnetcore.11.0.1.nupkg.sha512",
+    "C:\\Users\\Finni\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.0.1\\fluentvalidation.dependencyinjectionextensions.11.0.1.nupkg.sha512",
     "C:\\Users\\Finni\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Finni\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\6.0.4\\microsoft.aspnetcore.jsonpatch.6.0.4.nupkg.sha512",
     "C:\\Users\\Finni\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\6.0.4\\microsoft.aspnetcore.mvc.newtonsoftjson.6.0.4.nupkg.sha512",

@@ -3,7 +3,9 @@ using BlogWebAPI.Services;
 using BlogWebAPI.Services.Interfaces;
 using BlogWebAPI.Services.Serialization;
 using BlogWebAPI.Web.Middleware;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services
-    .AddMvc(options => options.Filters.Add<ValidationMiddleware>());
+    .AddMvc(options => options.Filters.Add<ValidationMiddleware>())
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ContractResolver = new DefaultContractResolver
+        {
+            NamingStrategy = new CamelCaseNamingStrategy()
+        }
+    );
 
 builder.Services.AddAutoMapper(
     config => config.AddProfile<EntityMappingProfile>(), 
