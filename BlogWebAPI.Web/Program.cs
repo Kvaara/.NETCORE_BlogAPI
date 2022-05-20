@@ -2,6 +2,7 @@ using BlogWebAPI.Data;
 using BlogWebAPI.Services;
 using BlogWebAPI.Services.Interfaces;
 using BlogWebAPI.Services.Serialization;
+using BlogWebAPI.Web.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services
+    .AddMvc(options => options.Filters.Add<ValidationMiddleware>());
 
 builder.Services.AddAutoMapper(
     config => config.AddProfile<EntityMappingProfile>(), 
