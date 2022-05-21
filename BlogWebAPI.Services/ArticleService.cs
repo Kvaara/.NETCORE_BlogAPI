@@ -335,7 +335,7 @@ public class ArticleService: IArticleService
             return new ServiceResult<Guid>
             {
                 IsSuccess = false,
-                Data = id,
+                Data = articleId,
                 Error = new ServiceError
                 {
                     Stacktrace = e.StackTrace,
