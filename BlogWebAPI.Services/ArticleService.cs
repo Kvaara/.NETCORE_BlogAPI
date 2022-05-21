@@ -8,6 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace BlogWebAPI.Services;
 
+/// <summary>
+/// Handles service-level business logic in relation to Blog Articles.
+/// </summary>
 public class ArticleService: IArticleService
 {
     private readonly IBlogRepository<Article> _articlesRepo;
