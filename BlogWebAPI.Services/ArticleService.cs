@@ -172,9 +172,75 @@ public class ArticleService: IArticleService
         }
     }
 
-    public async Task<ServiceResult<ArticleDto>> Update(Guid id, ArticleDto article)
+    public async Task<ServiceResult<ArticleDto>> Update(Guid articleId, ArticleDto articleDto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // Get the Article entity
+            var articleToUpdate = await _articlesRepo.GetById(articleId);
+
+            // Update the Article entity
+            articleToUpdate.Title = articleDto.Title;
+            articleToUpdate.Content = articleDto.Content;
+            
+            //  Delete all the ArticleTags on the existing entity
+            if (articleToUpdate.ArticleTags != null)
+            {
+                _logger.LogDebug($"Deleting existing ArticleTags for an Article with ID: {articleId}");
+                foreach (var articleTagEntity in articleToUpdate.ArticleTags)
+                {
+                    await _articleTagsRepo.Delete(articleTagEntity.ID);
+                }
+            }
+            
+            // If there are tags on the update request object, create the ArticleTags anew
+            if (articleDto.Tags != null && articleDto.Tags.Count > 0)
+            {
+                _logger.LogDebug($"Creating updated ArticleTags for an Article with ID: {articleId}");
+                foreach (var newTag in articleDto.Tags)
+                {
+                    var newTagGuid = Guid.Parse(newTag);
+                    var tag = await _tagsRepo.GetById(newTagGuid);
+
+                    var newArticleTag = new ArticleTag
+                    {
+                        ID = Guid.NewGuid(),
+                        Article = articleToUpdate,
+                        Tag = tag
+                    };
+                    await _articleTagsRepo.Create(newArticleTag);
+                }
+            }
+            
+            // Save the Article entity
+            var updatedArticle = await _articlesRepo.Update(articleToUpdate);
+
+            // Map back to a view model => return result
+            var articleResult = _mapper.Map<ArticleDto>(updatedArticle);
+            
+            _logger.LogDebug($"Updated an Article with ID: {articleId}");
+            return new ServiceResult<ArticleDto>
+            {
+                IsSuccess = true,
+                Data = articleResult,
+                Error = null,
+            };
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to update an Article: {e}.");
+
+            return new ServiceResult<ArticleDto>
+            {
+                IsSuccess = false,
+                Data = null,
+                Error = new ServiceError
+                {
+                    Stacktrace = e.StackTrace,
+                    Message = e.Message,
+                }
+            };
+        }
     }
 
     public async Task<ServiceResult<Guid>> Create(ArticleDto articleDto)
