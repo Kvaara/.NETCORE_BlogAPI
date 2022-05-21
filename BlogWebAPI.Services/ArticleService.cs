@@ -310,8 +310,35 @@ public class ArticleService: IArticleService
         }
     }
 
-    public async Task<ServiceResult<Guid>> Delete(Guid id)
+    public async Task<ServiceResult<Guid>> Delete(Guid articleId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _articlesRepo.Delete(articleId);
+            
+            _logger.LogDebug($"Deleted an Article with ID: {articleId}");
+
+            return new ServiceResult<Guid>
+            {
+                IsSuccess = true,
+                Data = articleId,
+                Error = null,
+            };
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Failed to delete an Article: {e}.");
+
+            return new ServiceResult<Guid>
+            {
+                IsSuccess = false,
+                Data = id,
+                Error = new ServiceError
+                {
+                    Stacktrace = e.StackTrace,
+                    Message = e.Message,
+                }
+            };
+        }
     }
 }
