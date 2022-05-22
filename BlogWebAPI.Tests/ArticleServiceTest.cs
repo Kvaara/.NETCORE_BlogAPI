@@ -2,7 +2,7 @@ using Xunit;
 
 namespace BlogWebAPI.Tests;
 
-public class UnitTest1
+public class ArticleServiceTest
 {
     [Fact]
     public void Test1()
