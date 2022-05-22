@@ -23,4 +23,11 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BlogWebAPI.Data\BlogWebAPI.Data.csproj" />
+    <ProjectReference Include="..\BlogWebAPI.Models\BlogWebAPI.Models.csproj" />
+    <ProjectReference Include="..\BlogWebAPI.Services\BlogWebAPI.Services.csproj" />
+    <ProjectReference Include="..\BlogWebAPI.Web\BlogWebAPI.Web.csproj" />
+  </ItemGroup>
+
 </Project>
