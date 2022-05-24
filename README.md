@@ -9,5 +9,8 @@ Technologies used:
 * FluentValidation
 * Netwonsoft.JSON
 * AutoMapper
+* Moq (**testing**)
+* Bogus (**testing**)
+* xUnit (**testing**)
 
 PostgreSQL container is containerized with docker-compose.
