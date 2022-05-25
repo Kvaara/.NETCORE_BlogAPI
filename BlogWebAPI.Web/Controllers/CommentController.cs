@@ -1,5 +1,6 @@
 ﻿using BlogWebAPI.Models;
 using BlogWebAPI.Services.Interfaces;
+using BlogWebAPI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogWebAPI.Web.Controllers;
@@ -77,5 +78,11 @@ public class CommentController : ControllerBase
             _logger.LogWarning($"There was a GUID related format error for a Comment: {id}" + e.Message + "\n" + e.StackTrace);
             return BadRequest(id);
         }
+    }
+
+    [HttpGet("/comment")]
+    public async Task<ActionResult> GetPaginatedComments([FromQuery] ManyCommentsRequest query)
+    {
+        
     }
 }
