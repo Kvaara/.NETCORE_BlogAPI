@@ -80,9 +80,41 @@ public class CommentController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Handles GET-requests for retrieving paginated Comments.
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
     [HttpGet("/comment")]
     public async Task<ActionResult> GetPaginatedComments([FromQuery] ManyCommentsRequest query)
     {
+        var page = query.Page == 0 ? 1 : query.Page;
+        var perPage = query.PerPage == 0 ? 10 : query.PerPage;
+
+        if (query.ArticleId != null)
+        {
+            var relatedArticleId = Guid.Parse(query.ArticleId);
+
+            var filteredComments = await _commentService.GetAll(page, perPage, relatedArticleId);
+
+            if (filteredComments.Error != null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"There was an error retrieving the Comments for the Article with ID: {query.ArticleId}.");
+            }
+            
+            _logger.LogDebug($"Retrieved comments for Article ID: {relatedArticleId}. " + $"Total: {filteredComments.Data.TotalCount}");
+            return Ok(filteredComments.Data);
+        }
+
+        var comments = await _commentService.GetAll(page, perPage);
+
+        if (comments.Error != null)
+        {
+            _logger.LogError($"Error retrieving paginated Comments: {comments.Error}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "There was an error retrieving the Comments.");
+        }
         
+        _logger.LogDebug($"Retrieved Comments, which totaled: {comments.Data.TotalCount}");
+        return Ok(comments.Data);
     }
 }
