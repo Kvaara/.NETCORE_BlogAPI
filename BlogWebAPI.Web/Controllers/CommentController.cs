@@ -71,7 +71,7 @@ public class CommentController : ControllerBase
             }
             
             _logger.LogDebug($"Retrieved a Comment: {id}");
-            return Ok(comment.Data)
+            return Ok(comment.Data);
         }
         catch (Exception e)
         {
