@@ -117,4 +117,34 @@ public class CommentController : ControllerBase
         _logger.LogDebug($"Retrieved Comments, which totaled: {comments.Data.TotalCount}");
         return Ok(comments.Data);
     }
+
+    /// <summary>
+    /// Handles PUT-requests for updating a Comment.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="commentDto"></param>
+    /// <returns></returns>
+    [HttpPut("/comment/{id}")]
+    public async Task<ActionResult> UpdateComment(string id, [FromBody] CommentDto commentDto)
+    {
+        try
+        {
+            var guid = Guid.Parse(id);
+            var updatedComment = await _commentService.Update(guid, commentDto);
+
+            if (updatedComment.Error != null)
+            {
+                _logger.LogError($"Error updating a Comment with the ID: {id}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "There was an error updating a Comment.");
+            }
+            
+            _logger.LogDebug($"Updated a Comment with the ID: {id}");
+            return Ok(updatedComment.Data.ID);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning($"There was a GUID format error for a Comment with the ID: {id}." + e.Message + "\n" + e.StackTrace);
+            return BadRequest(id);
+        }
+    }
 }
