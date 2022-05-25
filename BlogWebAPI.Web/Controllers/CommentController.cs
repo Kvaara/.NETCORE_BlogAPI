@@ -147,4 +147,34 @@ public class CommentController : ControllerBase
             return BadRequest(id);
         }
     }
+
+    /// <summary>
+    /// Handles DELETE-requests for deleting comments.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("/comment/{id}")]
+    public async Task<ActionResult> DeleteComment(string id)
+    {
+        try
+        {
+            var guid = Guid.Parse(id);
+            var deleted = await _commentService.Delete(guid);
+
+            if (deleted.Error != null)
+            {
+                _logger.LogDebug($"Error deleting a Comment with the ID: {id}. Error: {deleted.Error}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"There was an error deleting the Comment: {deleted.Error}");
+            }
+            
+            _logger.LogDebug($"Deleted a Comment with the ID: {id}");
+
+            return Ok(new {id = deleted.Data});
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning($"There was a GUID format error for the Comment with ID: {id}" + e.Message + "\n" + e.StackTrace);
+            return BadRequest(id);
+        }
+    }
 }
