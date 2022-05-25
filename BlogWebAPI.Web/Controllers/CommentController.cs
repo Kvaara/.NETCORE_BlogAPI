@@ -169,7 +169,8 @@ public class CommentController : ControllerBase
             
             _logger.LogDebug($"Deleted a Comment with the ID: {id}");
 
-            return Ok(new {id = deleted.Data});
+            // return Ok(new {id = deleted.Data}); // One way of responding to the client
+            return NoContent();
         }
         catch (Exception e)
         {
