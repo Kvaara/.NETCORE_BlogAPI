@@ -2,6 +2,8 @@
 
 A CRUD API for a blog solution that is made with .NET.
 
+This backend solution can be used in a full-fletched blog-like application be it on the web or on the phone.
+
 Technologies used:
 * .NET 6
 * Entity Framework Core
