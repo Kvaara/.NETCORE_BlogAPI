@@ -96,22 +96,36 @@ public class TagService : ITagService
     }
 
     /// <summary>
-    /// Creates an Comment.
+    /// Creates a Tag.
     /// </summary>
-    /// <param name="commentDto"></param>
+    /// <param name="tagDto"></param>
     /// <returns></returns>
-    public async Task<ServiceResult<Guid>> Create(CommentDto commentDto)
+    public async Task<ServiceResult<Guid>> Create(TagDto tagDto)
     {
         try
         {
-            var comment = _mapper.Map<Comment>(commentDto);
+            var existingTag = await _tags.GetFirstWhere(t => t.Name == tagDto.Name, t => t.CreatedOn);
 
-            var newCommentId = await _comments.Create(comment);
+            if (existingTag != null)
+            {
+                // The Tag already exists, which is why we can send a custom error.
+                return new ServiceResult<Guid>
+                {
+                    IsSuccess = false,
+                    Error = new ServiceError()
+                    {
+                        Message = "TAG_EXISTS"
+                    }
+                };
+            }
+
+            var tag = _mapper.Map<Tag>(tagDto);
+            var newTagID = await _tags.Create(tag);
 
             return new ServiceResult<Guid>
             {
                 IsSuccess = true,
-                Data = newCommentId,
+                Data = newTagID,
                 Error = null
             };
         }
