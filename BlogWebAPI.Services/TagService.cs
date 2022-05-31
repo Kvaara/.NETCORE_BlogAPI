@@ -185,7 +185,7 @@ public class TagService : ITagService
     }
 
     /// <summary>
-    /// Deletes a Comment.
+    /// Deletes a Tag.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -193,7 +193,7 @@ public class TagService : ITagService
     {
         try
         {
-            await _comments.Delete(id);
+            await _tags.Delete(id);
 
             return new ServiceResult<Guid>
             {
