@@ -1,4 +1,6 @@
-﻿using BlogWebAPI.Data.Models;
+﻿using AutoMapper;
+using BlogWebAPI.Data;
+using BlogWebAPI.Data.Models;
 using BlogWebAPI.Models;
 using BlogWebAPI.Services.Interfaces;
 using BlogWebAPI.Services.Models;
@@ -29,11 +31,11 @@ public class TagService : ITagService
     {
         try
         {
-            var tags = await _tags.getAll(page, perPage);
+            var tags = await _tags.GetAll(page, perPage);
 
             var tagsResultModel = new PaginationResult<TagDto>
             {
-                PageNumber = tags.pageNumber,
+                PageNumber = tags.PageNumber,
                 ResultsPerPage = tags.ResultsPerPage,
                 TotalCount = tags.TotalCount,
                 Results = _mapper.Map<List<TagDto>>(tags.Results),
