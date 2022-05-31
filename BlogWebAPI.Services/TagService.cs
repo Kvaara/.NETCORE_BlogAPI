@@ -1,4 +1,5 @@
-﻿using BlogWebAPI.Models;
+﻿using BlogWebAPI.Data.Models;
+using BlogWebAPI.Models;
 using BlogWebAPI.Services.Interfaces;
 using BlogWebAPI.Services.Models;
 
@@ -61,27 +62,27 @@ public class TagService : ITagService
     }
 
     /// <summary>
-    /// Gets an Comment.
+    /// Gets a Tag.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public async Task<ServiceResult<CommentDto>> GetById(Guid id)
+    public async Task<ServiceResult<TagDto>> GetById(Guid id)
     {
         try
         {
-            var comment = await _comments.GetById(id);
+            var tag = await _tags.GetById(id);
 
-            return new ServiceResult<CommentDto>
+            return new ServiceResult<TagDto>
             {
                 IsSuccess = true,
-                Data = _mapper.Map<CommentDto>(comment),
+                Data = _mapper.Map<TagDto>(tag),
                 Error = null,
             };
 
         }
         catch (Exception e)
         {
-            return new ServiceResult<CommentDto>
+            return new ServiceResult<TagDto>
             {
                 IsSuccess = false,
                 Data = null,
