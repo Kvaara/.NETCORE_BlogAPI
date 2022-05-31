@@ -145,34 +145,33 @@ public class TagService : ITagService
     }
 
     /// <summary>
-    /// Updates an Comment.
+    /// Updates a Tag.
     /// </summary>
-    /// <param name="commentId"></param>
-    /// <param name="commentDto"></param>
+    /// <param name="tagId"></param>
+    /// <param name="tagDto"></param>
     /// <returns></returns>
-    public async Task<ServiceResult<CommentDto>> Update(Guid commentId, CommentDto commentDto)
+    public async Task<ServiceResult<TagDto>> Update(Guid tagId, TagDto tagDto)
     {
         try
         {
-            var commentToUpdate = await _comments.GetById(commentId);
+            var tagToUpdate = await _tags.GetById(tagId);
 
-            commentToUpdate.Message = commentDto.Message;
-            commentToUpdate.CommenterName = commentDto.CommenterName;
+            tagToUpdate.Name = tagDto.Name;
 
-            var updatedComment = await _comments.Update(commentToUpdate);
+            var updatedTag = await _tags.Update(tagToUpdate);
 
-            var commentResult = _mapper.Map<CommentDto>(updatedComment);
+            var tagResult = _mapper.Map<TagDto>(updatedTag);
 
-            return new ServiceResult<CommentDto>
+            return new ServiceResult<TagDto>
             {
                 IsSuccess = true,
-                Data = commentResult,
+                Data = tagResult,
                 Error = null,
             };
         }
         catch (Exception e)
         {
-            return new ServiceResult<CommentDto>
+            return new ServiceResult<TagDto>
             {
                 IsSuccess = false,
                 Data = null,
