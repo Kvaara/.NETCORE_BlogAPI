@@ -48,4 +48,40 @@ public class TagController : ControllerBase
         _logger.LogDebug($"Created a Tag: {tagDto.Name} ({newTag.Data})");
         return StatusCode(StatusCodes.Status201Created, new {id = newTag.Data});
     }
+
+    /// <summary>
+    /// Handles a GET request for retrieving a Tag.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("/tag/{id}")]
+    public async Task<ActionResult> GetTag(string id)
+    {
+        try
+        {
+            var guid = Guid.Parse(id);
+            var tag = await _tagService.GetById(guid);
+
+            if (tag.Data == null && tag.Error == null)
+            {
+                _logger.LogWarning($"The requested Tag was not found: {id}");
+                return NotFound($"Tag was not found: {id}");
+            }
+
+            if (tag.Error != null)
+            {
+                _logger.LogError($"Error retrieving tag: {id}, {tag.Error}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "There was an error retrieving the Tag");
+            }
+            
+            _logger.LogDebug($"Retrieved a Tag: {id}");
+            return Ok(tag.Data);
+        }
+        catch (FormatException e)
+        {
+            _logger.LogWarning($"There was a GUID format related error for the Tag: {id}"
+            + e.Message + "\n" + e.StackTrace);
+            return BadRequest(id);
+        }
+    }
 }
