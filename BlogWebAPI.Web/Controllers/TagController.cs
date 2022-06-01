@@ -137,4 +137,34 @@ public class TagController : ControllerBase
             return BadRequest(id);
         }
     }
+
+    /// <summary>
+    /// Handles a DELETE request for deleting a Tag.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("/tag/{id}")]
+    public async Task<ActionResult> DeleteTag(string id)
+    {
+        try
+        {
+            var guid = Guid.Parse(id);
+            var deletedTag = await _tagService.Delete(guid);
+
+            if (deletedTag.Error != null)
+            {
+                _logger.LogError($"Error deleting the Tag {id}: {deletedTag.Error}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "There was an error deleting the Tag.");
+            }
+            
+            _logger.LogDebug($"Deleted the Tag: {id}");
+            return Ok(new {id = deletedTag.Data});
+        }
+        catch (FormatException e)
+        {
+            _logger.LogWarning($"There was a GUID related format error for Tag {id}"
+            + e.Message + "\n" + e.StackTrace);
+            return BadRequest(id);
+        }
+    }
 }
