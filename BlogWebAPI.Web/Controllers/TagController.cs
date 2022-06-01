@@ -107,4 +107,34 @@ public class TagController : ControllerBase
         _logger.LogDebug($"Retrieved tags total: {tags.Data.TotalCount}");
         return Ok(tags.Data);
     }
+
+    /// <summary>
+    /// Handles PUT requests for updating a Tag.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="tagDto"></param>
+    /// <returns></returns>
+    public async Task<ActionResult> UpdateTag(string id, [FromBody] TagDto tagDto)
+    {
+        try
+        {
+            var guid = Guid.Parse(id);
+            var updatedTag = await _tagService.Update(guid, tagDto);
+
+            if (updatedTag.Error != null)
+            {
+                _logger.LogError($"Error updating the Tag {id}: {updatedTag.Error}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "There was an error updating the Tag.");
+            }
+            
+            _logger.LogDebug($"Updated tag: {id}");
+            return Ok(updatedTag.Data.ID);
+        }
+        catch (FormatException e)
+        {
+            _logger.LogWarning($"There was a GUID format related error for the Tag: {id}"
+            + e.Message + "\n" + e.StackTrace);
+            return BadRequest(id);
+        }
+    }
 }
