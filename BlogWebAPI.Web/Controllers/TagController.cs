@@ -1,5 +1,6 @@
 ﻿using BlogWebAPI.Models;
 using BlogWebAPI.Services.Interfaces;
+using BlogWebAPI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogWebAPI.Web.Controllers;
@@ -83,5 +84,27 @@ public class TagController : ControllerBase
             + e.Message + "\n" + e.StackTrace);
             return BadRequest(id);
         }
+    }
+
+    /// <summary>
+    /// Handles a GET request for retrieving a paginated list of Tags.
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
+    [HttpGet("/tag")]
+    public async Task<ActionResult> GetPaginatedTags([FromQuery] ManyTagsRequest query)
+    {
+        var page = query.Page == 0 ? 1 : query.Page;
+        var perPage = query.PerPage == 0 ? 10 : query.PerPage;
+        var tags = await _tagService.GetAll(page, perPage);
+
+        if (tags.Error != null)
+        {
+            _logger.LogError($"Error retrieving paginated Tags: {tags.Error}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "There was an error retrieving the Tags");
+        }
+        
+        _logger.LogDebug($"Retrieved tags total: {tags.Data.TotalCount}");
+        return Ok(tags.Data);
     }
 }
